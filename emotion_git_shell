@@ -1,0 +1,20 @@
+function parse_git_dirty {
+    D="$(git status 2> /dev/null | tail -n1 | awk '{ print $1 }' )"
+    if [ "$D" = "nothing" ] ; then
+        echo -e "v-.-v : "
+    elif [ "$D" = "no" ]; then
+        echo -e "\_/! : "
+    elif [ "$D" = "#" ]; then
+        #echo -e "\_/||| \033[0;37m: "
+        echo -e "\_/||| : "
+    else
+        echo "-.-"
+    fi  
+}
+
+function parse_git_branch {
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/"
+}
+
+export PS1="\[\033[1;32m\]\t \[\033[1;35m\]\u@\h:\W \$(parse_git_dirty)\$(parse_git_branch)\$ \[\033[0m\]"
+
